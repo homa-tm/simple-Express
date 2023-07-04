@@ -24,24 +24,35 @@ const niletronweb = new TronWeb(
 );
 ///////////////////////////////////////////////////////
 
+const shastaHttpProvider = TronWeb.providers.HttpProvider;
+const shastafullNode = new HttpProvider('https://api.shasta.trongrid.io');
+const shastasolidityNode = new HttpProvider('https://api.shasta.trongrid.io');
+const shastaeventServer = new HttpProvider('https://api.shasta.trongrid.io');
+
+const shastatronweb = new TronWeb(
+  shastafullNode,
+  shastasolidityNode,
+  shastaeventServer,
+);
+
+///////////////////////////////////////////////////////
 async function getBalance(address) {
     try {
       const balanceNile = await niletronweb.trx.getBalance(address) / 1000000;
       const balanceMain = await tronweb.trx.getBalance(address) / 1000000;
+      const balanceShasta = await shastatronweb.trx.getBalance(address) / 1000000;
 
-      console.log(`Address: ` , address, `\nAddress balance: ${balanceNile} TRX, nile \nAddress balance: ${balanceMain} TRX, main net`);
+      console.log(`Address: ` , address, `\nAddress balance: ${balanceNile} TRX, nile \nAddress balance: ${balanceShasta} TRX, shasta net\nAddress balance: ${balanceMain} TRX, main net`);
     } catch (error) {
       console.error('Error retrieving address balance:', error);
     }
   }
   
-
 ///////////////////////////////////////////////////////
-
 
 async function updateAccountPermissionTrongrid() {
   // ownerAddress should be hex
-  let ownerAddress = 'ADDRESS_1_IN_HEX';
+  let ownerAddress = '4140dadc4ae6a8ecf9c071453b6c05c28a7d50e97f';
   let ownerPermission = { type: 0, permission_name: 'owner' };
   ownerPermission.threshold = 2;
   ownerPermission.keys = [];
@@ -53,12 +64,16 @@ async function updateAccountPermissionTrongrid() {
 
   //address should be hex. use this link: 
   //https://www.btcschools.net/tron/tron_tool_base58check_hex.php
-  ownerPermission.keys.push({ address: 'ADDRESS_1_IN_HEX', weight: 1 });
-  ownerPermission.keys.push({ address: 'ADDRESS_2_IN_HEX', weight: 1 });
+  ownerPermission.keys.push({ address: '4140dadc4ae6a8ecf9c071453b6c05c28a7d50e97f', weight: 1 });
+  ownerPermission.keys.push({ address: '414c18ec3dd2822b587b23b5adf09368ed9835ee0c', weight: 1 });
+  ownerPermission.keys.push({ address: '41fb65ef52cb52bdb604631b194902285025a9d6ed', weight: 1 });
 
 
-  activePermission.keys.push({ address: 'ADDRESS_1_IN_HEX', weight: 1 });
-  activePermission.keys.push({ address: 'ADDRESS_2_IN_HEX', weight: 1 });
+  activePermission.keys.push({ address: '4140dadc4ae6a8ecf9c071453b6c05c28a7d50e97f', weight: 1 });
+  activePermission.keys.push({ address: '414c18ec3dd2822b587b23b5adf09368ed9835ee0c', weight: 1 });
+  activePermission.keys.push({ address: '41fb65ef52cb52bdb604631b194902285025a9d6ed', weight: 1 });
+
+
 
   try {
     const updateTransaction = await niletronweb.transactionBuilder.updateAccountPermissions(ownerAddress, ownerPermission, null, [activePermission]);
@@ -100,8 +115,8 @@ async function main() {
     // to signTransaction(rawData, privateKey) 
     // or the signTransaction(rawData, privateKey) function could change.
     const privateKeys = [
-      'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 
-      'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' 
+      'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', //TFt8S2nHp8qUbxEjwUu3axVDJVfmFzFLaE
+      'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' //TGuaDJhFwMn38StgyQjYKcT3zqSmTEDufj
     ];
 
     
@@ -123,6 +138,6 @@ main();
 //this code executes an operation and uses 100 trx 
 
 //this is not tested yet, it may work. 
-//const rawTransaction = await niletronweb.trx.sendRawTransaction(signedTransaction);
+//const rawTransaction = await shastatronweb.trx.sendRawTransaction(signedTransaction);
 //console.log(`the transaction on the network is:`, rawTransaction);
 
