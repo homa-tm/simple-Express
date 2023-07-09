@@ -1,6 +1,4 @@
 const { DataTypes } = require('sequelize');
-//const { sequelize } = require("../dbsetup.js");
-
 
 module.exports = (sequelize) => {
     sequelize.define('Wallet', {
@@ -12,18 +10,17 @@ module.exports = (sequelize) => {
         },
         address: {
             allowNull: false,
-            type: DataTypes.CHAR(50),
-            unique: false
+            type: DataTypes.STRING(34),
+            unique: true
         },
-        trxBalance: {
+        balance: {
             allowNull: true,
             type: DataTypes.BIGINT,
-            unique: true
         },
         usdtBalance: {
             allowNull: true,
             type: DataTypes.BIGINT,
-            unique: true
+           
         }
     },
     {

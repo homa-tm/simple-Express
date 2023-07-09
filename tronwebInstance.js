@@ -22,7 +22,7 @@ async function getTronweb(network) {
 async function getBalance(address, network) {
     try {
       const tronWeb = await getTronweb(network); // Wait for the tronWeb instance
-      const balance = await tronWeb.trx.getBalance(address) / 1000000;
+      const balance = await tronWeb.trx.getBalance(address);
       return balance;
       // console.log(`Address: ` , address,`\nNetwork: ` , network, `\nbalance: ${balance} TRX`);
     } catch (error) {
